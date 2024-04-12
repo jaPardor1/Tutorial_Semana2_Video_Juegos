@@ -3,7 +3,8 @@ import json
 import pygame
 import esper
 
-from src.create.prefab_creator import create_square
+from src.create.prefab_creator import create_square,create_enemy_spawner
+from src.ecs.systems.s_enemy_spawner import system_enemy_spawner
 from src.ecs.systems.s_movement import system_movement
 from src.ecs.systems.s_rendering import system_rendering
 from src.ecs.systems.s_screen_bounce import system_screen_bounce
@@ -33,6 +34,11 @@ class GameEngine:
     def _load_config_files(self):
         with open("assets/cfg/window.json", encoding="utf-8") as window_file:
             self.window_cfg = json.load(window_file)
+        with open("assets/cfg/enemies.json", encoding="utf-8") as window_file:
+            self.enemies_cfg = json.load(window_file)
+        with open("assets/cfg/level_01.json", encoding="utf-8") as window_file:
+            self.level_01_cfg = json.load(window_file)
+        
 
     async def run(self) -> None:
         self._create()
@@ -46,11 +52,7 @@ class GameEngine:
         self._clean()
 
     def _create(self):
-        create_square(self.ecs_world, 
-                        pygame.Vector2(50, 50),
-                        pygame.Vector2(150, 100),
-                        pygame.Vector2(-100, 200),
-                        pygame.Color(255, 255, 100))
+        create_enemy_spawner(self.ecs_world,self.level_01_cfg)
 
     def _calculate_time(self):
         self.clock.tick(self.framerate)
@@ -62,6 +64,7 @@ class GameEngine:
                 self.is_running = False
 
     def _update(self):
+        system_enemy_spawner(self.ecs_world,self.enemies_cfg,self.delta_time)
         system_movement(self.ecs_world, self.delta_time)
         system_screen_bounce(self.ecs_world, self.screen)
 
