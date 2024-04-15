@@ -3,7 +3,8 @@ import json
 import pygame
 import esper
 
-from src.create.prefab_creator import create_square,create_enemy_spawner
+from src.create.prefab_creator import create_player_square, create_square,create_enemy_spawner
+from src.ecs.components.c_velocity import CVelocity
 from src.ecs.systems.s_enemy_spawner import system_enemy_spawner
 from src.ecs.systems.s_movement import system_movement
 from src.ecs.systems.s_rendering import system_rendering
@@ -34,13 +35,12 @@ class GameEngine:
     def _load_config_files(self):
         with open("assets/cfg/window.json", encoding="utf-8") as window_file:
             self.window_cfg = json.load(window_file)
-            
         with open("assets/cfg/enemies.json", encoding="utf-8") as enemies_file:
             self.enemies_cfg = json.load(enemies_file)
-            print( self.enemies_cfg)
         with open("assets/cfg/level_01.json", encoding="utf-8") as level_01_file:
             self.level_01_cfg = json.load(level_01_file)
-            print( self.level_01_cfg)
+        with open("assets/cfg/player.json", encoding="utf-8") as player_file:
+            self.player_cfg = json.load(player_file)
             
         
 
@@ -56,7 +56,10 @@ class GameEngine:
         self._clean()
 
     def _create(self):
-        create_enemy_spawner(self.ecs_world,self.level_01_cfg)
+       self._player_entity = create_player_square(self.ecs_world,self.player_cfg,self.level_01_cfg["player_spawn"])
+       self._player_c_v = self.ecs_world.component_for_entity(self._player_entity,CVelocity)
+       
+       create_enemy_spawner(self.ecs_world,self.level_01_cfg)
 
     def _calculate_time(self):
         self.clock.tick(self.framerate)
