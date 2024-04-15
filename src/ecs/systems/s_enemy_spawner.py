@@ -6,7 +6,6 @@ def system_enemy_spawner(world:esper,enemies_data:dict,delta_time:float):
     components = world.get_component(CEnemySpawner)
     c_spw:CEnemySpawner
     for _, c_spw in components:
-        print(c_spw.current_time)
         c_spw.current_time +=delta_time
         spw_evt:SpawnEventData
         for spw_evt in c_spw.spawn_event_data:
