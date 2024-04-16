@@ -44,6 +44,10 @@ class GameEngine:
             self.level_01_cfg = json.load(level_01_file)
         with open("assets/cfg/player.json", encoding="utf-8") as player_file:
             self.player_cfg = json.load(player_file)
+        with open("assets/cfg/bullet.json", encoding="utf-8") as player_bullet:
+            self.bullets_cfg = json.load(player_bullet)
+            
+
             
         
 
@@ -114,6 +118,9 @@ class GameEngine:
                 self._player_c_v.vel.y += self.player_cfg["input_velocity"]
             elif c_input.phase == CommandPhase.END:
                 self._player_c_v.vel.y -= self.player_cfg["input_velocity"]
+        if(c_input.name == "PLAYER_FIRE"):
+            if c_input.phase == CommandPhase.START:
+               print("Click !!")
 
 
 

@@ -23,6 +23,11 @@ def create_square(ecs_world:esper.World, size:pygame.Vector2,
                 CVelocity(vel))
     return cuad_entity
 
+
+def create_enemy_spawner(world:esper.World,level_data:dict):
+        spawner_entity = world.create_entity()
+        world.add_component(spawner_entity,CEnemySpawner(level_data["enemy_spawn_events"]))
+
 def create_enemy_square(world:esper.World,pos:pygame.Vector2,enemy_info:dict):
    size = pygame.Vector2(enemy_info["size"]["x"],enemy_info["size"]["y"])
    color = pygame.Color(enemy_info["color"]["r"],
@@ -36,11 +41,6 @@ def create_enemy_square(world:esper.World,pos:pygame.Vector2,enemy_info:dict):
    enemy_entity=create_square(world,size,pos,velocity,color)
    world.add_component(enemy_entity,CTagEnemy())
 
-def create_enemy_spawner(world:esper.World,level_data:dict):
-        spawner_entity = world.create_entity()
-        world.add_component(spawner_entity,CEnemySpawner(level_data["enemy_spawn_events"]))
-
-
 def create_player_square(world:esper.World,player_info:dict,player_lvl_info:dict)-> int:
      size = pygame.Vector2(player_info["size"]["x"],player_info["size"]["y"])
      color = pygame.Color(player_info["color"]["r"],player_info["color"]["g"],player_info["color"]["b"])
@@ -51,16 +51,27 @@ def create_player_square(world:esper.World,player_info:dict,player_lvl_info:dict
      world.add_component(player_entity,CTagPlayer())
      return player_entity
 
+def create_bullet_square(world:esper.World,pos:pygame.Vector2,bullet_info:dict):
+     
+     size = pygame.Vector2(bullet_info["size"]["x"],bullet_info["size"]["y"])
+     color = pygame.Color(bullet_info["color"]["r"],
+                          bullet_info["color"]["g"],
+                          bullet_info["color"]["b"])
+     velocity = pygame.Vector2(bullet_info["vellocity"],bullet_info["vellocity"])
+     bullet_entity = create_square(world,size,pos,velocity,color)
+     world.add_component(bullet_entity,CTagEnemy())
+     
+
 def create_input_player(world:esper.World):
      input_left = world.create_entity()
      input_right = world.create_entity()
      input_up = world.create_entity()
      input_down = world.create_entity()
-  #   MOUSE_down = world.create_entity()
+     MOUSE_down = world.create_entity()
      world.add_component(input_left,CInputCommand("PLAYER_LEFT",pygame.K_LEFT))
      world.add_component(input_right,CInputCommand("PLAYER_RIGHT",pygame.K_RIGHT))
      world.add_component(input_up,CInputCommand("PLAYER_UP",pygame.K_UP))
      world.add_component(input_down,CInputCommand("PLAYER_DOWN",pygame.K_DOWN))
- #    world.add_component(MOUSE_down,CInputCommand("MOUSEBUTTONdown",pygame.MOUSEBUTTONDOWN))
+     world.add_component(MOUSE_down,CInputCommand("PLAYER_FIRE",pygame.MOUSEBUTTONDOWN))
 
 
