@@ -8,6 +8,7 @@ from src.ecs.components.c_input_command import CInputCommand
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
+from src.ecs.components.tags.c_tag_bullet import CTagBullet
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
 from src.ecs.components.tags.c_tag_player import CTagPlayer
 
@@ -57,9 +58,9 @@ def create_bullet_square(world:esper.World,pos:pygame.Vector2,bullet_info:dict):
      color = pygame.Color(bullet_info["color"]["r"],
                           bullet_info["color"]["g"],
                           bullet_info["color"]["b"])
-     velocity = pygame.Vector2(bullet_info["vellocity"],bullet_info["vellocity"])
+     velocity = pygame.Vector2(bullet_info["velocity"],bullet_info["velocity"])
      bullet_entity = create_square(world,size,pos,velocity,color)
-     world.add_component(bullet_entity,CTagEnemy())
+     world.add_component(bullet_entity,CTagBullet())
      
 
 def create_input_player(world:esper.World):
