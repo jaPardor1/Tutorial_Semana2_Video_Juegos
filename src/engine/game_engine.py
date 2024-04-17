@@ -5,6 +5,7 @@ import esper
 
 from src.create.prefab_creator import create_bullet_square, create_input_player, create_player_square, create_square,create_enemy_spawner
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
+from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
 from src.ecs.systems.s_check_bullet_bound import system_check_bullet_bound
@@ -71,6 +72,7 @@ class GameEngine:
        self._player_entity = create_player_square(self.ecs_world,self.player_cfg,self.level_01_cfg["player_spawn"])
        self._player_c_v = self.ecs_world.component_for_entity(self._player_entity,CVelocity)
        self._player_c_t = self.ecs_world.component_for_entity(self._player_entity,CTransform)
+       self._player_c_s = self.ecs_world.component_for_entity(self._player_entity,CSurface)
        
        create_enemy_spawner(self.ecs_world,self.level_01_cfg)
        create_input_player(self.ecs_world)
@@ -130,8 +132,11 @@ class GameEngine:
                 self._player_c_v.vel.y -= self.player_cfg["input_velocity"]
         if(c_input.name == "PLAYER_FIRE"):
             if c_input.phase == CommandPhase.START:
-               create_bullet_square(self.ecs_world,pygame.Vector2(self._player_c_t.pos.x,self._player_c_t.pos.y),self.bullets_cfg)
+               pos_x = self._player_c_t.pos.x + self._player_c_s.surf.get_width()/2
+               pos_y = self._player_c_t.pos.y + self._player_c_s.surf.get_height()/2
                print("Fire !!")
+               create_bullet_square(self.ecs_world,pygame.Vector2(pos_x,pos_y),self.bullets_cfg)
+               
 
 
 
