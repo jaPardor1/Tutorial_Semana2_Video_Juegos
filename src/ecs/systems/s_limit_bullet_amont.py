@@ -8,7 +8,7 @@ from src.ecs.components.tags.c_tag_enemy import CTagEnemy
 def system_limit_bullet_amount(world:esper.World,bullet_max_limit:int):
     bullet_components=world.get_components(CSurface,CTransform,CTagBullet)
     
-    print(str(len(bullet_components)) +'/'+str(bullet_max_limit))
+   # print(str(len(bullet_components)) +'/'+str(bullet_max_limit))
     
     if len(bullet_components) > bullet_max_limit:
          last_bullet = None

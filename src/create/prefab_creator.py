@@ -54,11 +54,23 @@ def create_player_square(world:esper.World,player_info:dict,player_lvl_info:dict
 
 def create_bullet_square(world:esper.World,pos:pygame.Vector2,bullet_info:dict):
      
+    
+     
+
      size = pygame.Vector2(bullet_info["size"]["x"],bullet_info["size"]["y"])
      color = pygame.Color(bullet_info["color"]["r"],
                           bullet_info["color"]["g"],
                           bullet_info["color"]["b"])
-     velocity = pygame.Vector2(bullet_info["velocity"],bullet_info["velocity"])
+     vel = bullet_info["velocity"]
+
+
+     x, y = pygame.mouse.get_pos()
+     
+     vect_mouse = pygame.Vector2(x,y)
+     vel_real = (vect_mouse-pos)
+     vel_real = vel_real.normalize() * vel
+
+     velocity = vel_real
      bullet_entity = create_square(world,size,pos,velocity,color)
      world.add_component(bullet_entity,CTagBullet())
      

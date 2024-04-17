@@ -135,10 +135,14 @@ class GameEngine:
                pos_x = self._player_c_t.pos.x + self._player_c_s.surf.get_width()/2
                pos_y = self._player_c_t.pos.y + self._player_c_s.surf.get_height()/2
                print("Fire !!")
+               x, y = pygame.mouse.get_pos()
+               print("Clic izquierdo en:", x, y)
                create_bullet_square(self.ecs_world,pygame.Vector2(pos_x,pos_y),self.bullets_cfg)
-               
+    
+    
+    
 
-
+  
 
 
 
