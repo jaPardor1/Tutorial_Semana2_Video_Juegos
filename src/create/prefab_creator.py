@@ -85,6 +85,6 @@ def create_input_player(world:esper.World):
      world.add_component(input_right,CInputCommand("PLAYER_RIGHT",pygame.K_RIGHT))
      world.add_component(input_up,CInputCommand("PLAYER_UP",pygame.K_UP))
      world.add_component(input_down,CInputCommand("PLAYER_DOWN",pygame.K_DOWN))
-     world.add_component(MOUSE_down,CInputCommand("PLAYER_FIRE",pygame.MOUSEBUTTONDOWN))
+     world.add_component(MOUSE_down,CInputCommand("PLAYER_FIRE",pygame.BUTTON_LEFT))
 
 
