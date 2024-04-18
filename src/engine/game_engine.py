@@ -8,6 +8,7 @@ from src.ecs.components.c_input_command import CInputCommand, CommandPhase
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
+from src.ecs.systems.s_animation import system_animation
 from src.ecs.systems.s_check_bullet_bound import system_check_bullet_bound
 from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
 from src.ecs.systems.s_collision_player_enemy import system_collision_player_enemy
@@ -97,6 +98,7 @@ class GameEngine:
         system_collision_bullet_enemy(self.ecs_world)
         system_restrain_player_bound(self.ecs_world, self.screen)
         
+        system_animation(self.ecs_world,self.delta_time)
         self.ecs_world._clear_dead_entities()
 
     def _draw(self):
@@ -132,11 +134,12 @@ class GameEngine:
                 self._player_c_v.vel.y -= self.player_cfg["input_velocity"]
         if(c_input.name == "PLAYER_FIRE"):
             if c_input.phase == CommandPhase.START:
-               pos_x = self._player_c_t.pos.x + self._player_c_s.surf.get_width()/2
-               pos_y = self._player_c_t.pos.y + self._player_c_s.surf.get_height()/2
+               ####
+               
+               pos_x = self._player_c_t.pos.x + self._player_c_s.area.size[0]/2 
+               pos_y = self._player_c_t.pos.y + self._player_c_s.area.size[1]/2
+               ####
                print("Fire !!")
-               x, y = pygame.mouse.get_pos()
-               print("Clic izquierdo en:", x, y)
                create_bullet_square(self.ecs_world,pygame.Vector2(pos_x,pos_y),self.bullets_cfg)
     
     

@@ -3,6 +3,7 @@ import random
 import esper
 import pygame
 
+from src.ecs.components.c_animation import CAnimation
 from src.ecs.components.c_enemy_spawner import CEnemySpawner
 from src.ecs.components.c_input_command import CInputCommand
 from src.ecs.components.c_surface import CSurface
@@ -58,6 +59,7 @@ def create_player_square(world:esper.World,player_info:dict,player_lvl_info:dict
      vel = pygame.Vector2(0,0)
      player_entity = create_sprite(world,pos,vel,player_surface)
      world.add_component(player_entity,CTagPlayer())
+     world.add_component(player_entity,CAnimation(player_info["animations"]))
      return player_entity
 
 def create_bullet_square(world:esper.World,pos:pygame.Vector2,bullet_info:dict):

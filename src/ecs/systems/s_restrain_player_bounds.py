@@ -14,7 +14,7 @@ def system_restrain_player_bound(world:esper.World, screen:pygame.Surface):
       screen_rect = screen.get_rect()
       player_component = world.get_components(CTransform, CVelocity, CSurface,CTagPlayer)
       for player, (c_t, c_v, c_s,c_e) in player_component:
-        cuad_rect = c_s.surf.get_rect(topleft=c_t.pos)
+        cuad_rect = CSurface.get_area_relative(c_s.area,c_t.pos)  # c_s.surf.get_rect(topleft=c_t.pos)
         if cuad_rect.left < 0 or cuad_rect.right > screen_rect.width:
            cuad_rect.clamp_ip(screen_rect)
            c_t.pos.x = cuad_rect.x
