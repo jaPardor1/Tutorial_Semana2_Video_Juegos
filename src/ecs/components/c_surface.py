@@ -15,5 +15,5 @@ class CSurface:
     
     def get_area_relative(area:pygame.rect,pos_topleft:pygame.Vector2):
         new_rect = area.copy()
-        new_rect.topeleft = pos_topleft.copy
+        new_rect.topleft = pos_topleft.copy()
         return new_rect
