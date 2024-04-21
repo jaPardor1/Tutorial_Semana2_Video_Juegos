@@ -94,6 +94,7 @@ class GameEngine:
         system_movement(self.ecs_world, self.delta_time)
         
         system_player_state(self.ecs_world)
+        system_animation(self.ecs_world,self.delta_time)
         system_screen_bounce(self.ecs_world, self.screen)
         system_check_bullet_bound(self.ecs_world, self.screen)
         system_collision_player_enemy(self.ecs_world,self._player_entity,self.level_01_cfg)
@@ -101,7 +102,7 @@ class GameEngine:
         system_collision_bullet_enemy(self.ecs_world)
         system_restrain_player_bound(self.ecs_world, self.screen)
         
-        system_animation(self.ecs_world,self.delta_time)
+        
         self.ecs_world._clear_dead_entities()
 
     def _draw(self):
