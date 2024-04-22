@@ -9,10 +9,13 @@ from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
 from src.ecs.systems.s_animation import system_animation
+
 from src.ecs.systems.s_check_bullet_bound import system_check_bullet_bound
 from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
 from src.ecs.systems.s_collision_player_enemy import system_collision_player_enemy
 from src.ecs.systems.s_enemy_spawner import system_enemy_spawner
+from src.ecs.systems.s_explosion_time import system_explosion_time
+from src.ecs.systems.s_hunter_state import system_hunter_state
 from src.ecs.systems.s_input_player import system_input_player
 from src.ecs.systems.s_limit_bullet_amont import system_limit_bullet_amount
 from src.ecs.systems.s_movement import system_movement
@@ -54,6 +57,8 @@ class GameEngine:
             self.player_cfg = json.load(player_file)
         with open("assets/cfg/bullet.json", encoding="utf-8") as player_bullet:
             self.bullets_cfg = json.load(player_bullet)
+        with open("assets/cfg/explosion.json", encoding="utf-8") as enemy_explosion:
+            self.explosion_cfg = json.load(enemy_explosion)
             
 
             
@@ -92,17 +97,17 @@ class GameEngine:
     def _update(self):
         system_enemy_spawner(self.ecs_world,self.enemies_cfg,self.delta_time)
         system_movement(self.ecs_world, self.delta_time)
-        
-        system_player_state(self.ecs_world)
         system_animation(self.ecs_world,self.delta_time)
         system_screen_bounce(self.ecs_world, self.screen)
         system_check_bullet_bound(self.ecs_world, self.screen)
-        system_collision_player_enemy(self.ecs_world,self._player_entity,self.level_01_cfg)
+        #system_explosion_time(self.ecs_world)
+        system_collision_player_enemy(self.ecs_world,self._player_entity,self.level_01_cfg,self.explosion_cfg)
+        system_collision_bullet_enemy(self.ecs_world,self.explosion_cfg)
         system_limit_bullet_amount(self.ecs_world,self.level_01_cfg["player_spawn"]["max_bullets"])
-        system_collision_bullet_enemy(self.ecs_world)
         system_restrain_player_bound(self.ecs_world, self.screen)
-        
-        
+       
+        #system_hunter_chase(self.ecs_world,self._player_entity,self.enemies_cfg["Hunter"])
+        system_hunter_state(self.ecs_world,self._player_entity)
         self.ecs_world._clear_dead_entities()
 
     def _draw(self):
@@ -115,7 +120,7 @@ class GameEngine:
         pygame.quit()
 
     def _do_action(self,c_input:CInputCommand):
-        print(c_input.name+" "+str(c_input.phase))
+        #print(c_input.name+" "+str(c_input.phase))
         if c_input.name=="PLAYER_LEFT":
             if c_input.phase == CommandPhase.START:
                 self._player_c_v.vel.x -= self.player_cfg["input_velocity"]
@@ -143,7 +148,7 @@ class GameEngine:
                pos_x = self._player_c_t.pos.x + self._player_c_s.area.size[0]/2 
                pos_y = self._player_c_t.pos.y + self._player_c_s.area.size[1]/2
                ####
-               print("Fire !!")
+              
                create_bullet_square(self.ecs_world,pygame.Vector2(pos_x,pos_y),self.bullets_cfg)
     
     

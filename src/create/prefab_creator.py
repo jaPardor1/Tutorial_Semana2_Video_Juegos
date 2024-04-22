@@ -5,13 +5,18 @@ import pygame
 
 from src.ecs.components.c_animation import CAnimation
 from src.ecs.components.c_enemy_spawner import CEnemySpawner
+from src.ecs.components.c_hunter import CHunter
+from src.ecs.components.c_hunter_state import CHunterState
 from src.ecs.components.c_input_command import CInputCommand
 from src.ecs.components.c_player_state import CPlayerState
 from src.ecs.components.c_surface import CSurface
+from src.ecs.components.c_tiempo_vida import CTiempoVida
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
+from src.ecs.components.tags.c_tag_chaser import CTagChaser
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
+from src.ecs.components.tags.c_tag_explosion import CTagExplosion
 from src.ecs.components.tags.c_tag_player import CTagPlayer
 
 
@@ -55,8 +60,16 @@ def create_enemy_hunter(world:esper.World,pos:pygame.Vector2,enemy_info:dict):
    enemy_surface = pygame.image.load(enemy_info["image"]).convert_alpha()
    vel  = pygame.Vector2(0,0)
    enemy_entity=create_sprite(world,pos,vel,enemy_surface)
+   velocity_chase = enemy_info["velocity_chase"]
+   velocity_return = enemy_info["velocity_return"]
+   distance_start_chase = enemy_info["distance_start_chase"]
+   distance_start_return = enemy_info["distance_start_return"]
    world.add_component(enemy_entity,CTagEnemy())
+   world.add_component(enemy_entity,CTagChaser())
+   world.add_component(enemy_entity,CHunter(pos,velocity_chase,velocity_return,distance_start_chase,distance_start_return))
+   world.add_component(enemy_entity,CHunterState())
    world.add_component(enemy_entity,CAnimation(enemy_info["animations"]))
+   
 
 
 
@@ -103,3 +116,20 @@ def create_input_player(world:esper.World):
      world.add_component(MOUSE_down,CInputCommand("PLAYER_FIRE",pygame.BUTTON_LEFT))
 
 
+def create_explosion(world:esper.World,pos:pygame.Vector2,explosion_info:dict):
+     
+     explosion_surface = pygame.image.load(explosion_info["image"]).convert_alpha()
+     pos = pygame.Vector2(pos.x,
+                          pos.y)
+     vel = pygame.Vector2(0,0)
+     explosion_entity = create_sprite(world,pos,vel,explosion_surface)
+     world.add_component(explosion_entity,CTagExplosion())
+     world.add_component(explosion_entity,CTiempoVida())
+     world.add_component(explosion_entity,CAnimation(explosion_info["animations"]))
+     
+
+     
+
+
+
+    

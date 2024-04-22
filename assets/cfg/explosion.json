@@ -6,8 +6,8 @@
             {
                 "name": "EXPLODE",
                 "start": 0,
-                "end": 7,
-                "framerate": 16
+                "end": 8,
+                "framerate": 10
             }
         ]
     }
