@@ -100,7 +100,7 @@ class GameEngine:
         system_animation(self.ecs_world,self.delta_time)
         system_screen_bounce(self.ecs_world, self.screen)
         system_check_bullet_bound(self.ecs_world, self.screen)
-        #system_explosion_time(self.ecs_world)
+        system_explosion_time(self.ecs_world)
         system_collision_player_enemy(self.ecs_world,self._player_entity,self.level_01_cfg,self.explosion_cfg)
         system_collision_bullet_enemy(self.ecs_world,self.explosion_cfg)
         system_limit_bullet_amount(self.ecs_world,self.level_01_cfg["player_spawn"]["max_bullets"])

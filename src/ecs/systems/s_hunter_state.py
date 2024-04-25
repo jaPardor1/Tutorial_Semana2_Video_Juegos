@@ -5,6 +5,7 @@ from src.ecs.components.c_hunter_state import CHunterState, HunterState
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
 from src.ecs.components.tags.c_tag_player import CTagPlayer
+from src.engine.service_locator import ServiceLocator
 
 
 def system_hunter_state(world:esper.World,pl:int):
@@ -37,6 +38,7 @@ def _perseguir(world:esper.World,player_entity:int,c_t:CTransform,c_v:CVelocity,
     
     if(distance<=c_h.distance_start_chase):
         #print('chasing!!!')
+        ServiceLocator.sounds_service.play("assets/snd/ufo.ogg")
         c_hst.state = HunterState.CHASING
         c_v.vel.x = pl_t.pos.x - c_t.pos.x
         c_v.vel.y = pl_t.pos.y - c_t.pos.y
