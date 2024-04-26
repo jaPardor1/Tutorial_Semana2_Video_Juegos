@@ -3,7 +3,7 @@ import json
 import pygame
 import esper
 
-from src.create.prefab_creator import create_bullet_square, create_input_player, create_player_square, create_square,create_enemy_spawner
+from src.create.prefab_creator import create_bullet_square, create_input_player, create_player_square, create_square,create_enemy_spawner, create_textos_fijos
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
@@ -83,6 +83,7 @@ class GameEngine:
        
        create_enemy_spawner(self.ecs_world,self.level_01_cfg)
        create_input_player(self.ecs_world)
+       create_textos_fijos(self.ecs_world)
 
     def _calculate_time(self):
         self.clock.tick(self.framerate)
@@ -144,11 +145,9 @@ class GameEngine:
         if(c_input.name == "PLAYER_FIRE"):
             if c_input.phase == CommandPhase.START:
                ####
-               
                pos_x = self._player_c_t.pos.x + self._player_c_s.area.size[0]/2 
                pos_y = self._player_c_t.pos.y + self._player_c_s.area.size[1]/2
                ####
-              
                create_bullet_square(self.ecs_world,pygame.Vector2(pos_x,pos_y),self.bullets_cfg)
     
     

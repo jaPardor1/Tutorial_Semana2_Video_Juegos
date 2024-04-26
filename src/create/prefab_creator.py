@@ -10,6 +10,7 @@ from src.ecs.components.c_hunter_state import CHunterState
 from src.ecs.components.c_input_command import CInputCommand
 from src.ecs.components.c_player_state import CPlayerState
 from src.ecs.components.c_surface import CSurface
+from src.ecs.components.c_texto import Ctexto
 from src.ecs.components.c_tiempo_vida import CTiempoVida
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
@@ -133,8 +134,16 @@ def create_explosion(world:esper.World,pos:pygame.Vector2,explosion_info:dict):
      world.add_component(explosion_entity,CTagExplosion())
      world.add_component(explosion_entity,CTiempoVida())
      world.add_component(explosion_entity,CAnimation(explosion_info["animations"]))
-     ServiceLocator.sounds_service.play(explosion_info["sound"])     
+     ServiceLocator.sounds_service.play(explosion_info["sound"])
 
+def create_textos_fijos(world:esper.World):
+     font_path = "assets/fnt/PressStart2P.ttf"
+     text_entity = world.create_entity()
+     world.add_component(text_entity,Ctexto("hola !!!",font_path,20,(255, 255, 255)))
+     
+     surface = text_entity
+     
+     orld.add_component(text_entity,CSurface.from_surface())
      
 
 
