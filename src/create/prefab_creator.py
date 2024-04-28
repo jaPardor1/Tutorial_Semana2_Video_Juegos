@@ -5,12 +5,13 @@ import pygame
 
 from src.ecs.components.c_animation import CAnimation
 from src.ecs.components.c_enemy_spawner import CEnemySpawner
+from src.ecs.components.c_game_state import CGameState, GameState
 from src.ecs.components.c_hunter import CHunter
 from src.ecs.components.c_hunter_state import CHunterState
 from src.ecs.components.c_input_command import CInputCommand
 from src.ecs.components.c_player_state import CPlayerState
 from src.ecs.components.c_surface import CSurface
-from src.ecs.components.c_texto import Ctexto
+from src.ecs.components.c_texto import CTexto
 from src.ecs.components.c_tiempo_vida import CTiempoVida
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
@@ -18,6 +19,7 @@ from src.ecs.components.tags.c_tag_bullet import CTagBullet
 from src.ecs.components.tags.c_tag_chaser import CTagChaser
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
 from src.ecs.components.tags.c_tag_explosion import CTagExplosion
+from src.ecs.components.tags.c_tag_pause import CTagPause
 from src.ecs.components.tags.c_tag_player import CTagPlayer
 from src.engine.service_locator import ServiceLocator
 
@@ -121,6 +123,8 @@ def create_input_player(world:esper.World):
      world.add_component(input_up,CInputCommand("PLAYER_UP",pygame.K_UP))
      world.add_component(input_down,CInputCommand("PLAYER_DOWN",pygame.K_DOWN))
      world.add_component(MOUSE_down,CInputCommand("PLAYER_FIRE",pygame.BUTTON_LEFT))
+     world.add_component(MOUSE_down,CInputCommand("PLAYER_PAUSE",pygame.K_p))
+
 
 
 def create_explosion(world:esper.World,pos:pygame.Vector2,explosion_info:dict):
@@ -137,13 +141,80 @@ def create_explosion(world:esper.World,pos:pygame.Vector2,explosion_info:dict):
      ServiceLocator.sounds_service.play(explosion_info["sound"])
 
 def create_textos_fijos(world:esper.World):
-     font_path = "assets/fnt/PressStart2P.ttf"
      text_entity = world.create_entity()
-     world.add_component(text_entity,Ctexto("hola !!!",font_path,20,(255, 255, 255)))
+     color = pygame.Color(255, 255, 255)
+     world.add_component(text_entity,CTexto("EJERCICIO 04",10,color))
+     pos = pygame.Vector2(10,10)
+     world.add_component(text_entity,CTransform(pos))
+
+     ###################################################################
+     text_entity = world.create_entity()
+     color = pygame.Color(255, 255, 255)
+     world.add_component(text_entity,CTexto("ESPECIAL",8,color))
+     pos = pygame.Vector2(10,320)
+     world.add_component(text_entity,CTransform(pos))
+
+     ###################################################################
+
+     text_entity = world.create_entity()
+     color = pygame.Color(4, 221, 4)
+     world.add_component(text_entity,CTexto("100%",8,color))
+     pos = pygame.Vector2(10,330)
+     world.add_component(text_entity,CTransform(pos))
+
+
+     #################################################################
+
+     text_entity = world.create_entity()
+     color = pygame.Color(253,253, 9)
+     texto = "Controles: tecla p= pausa , flechas = mover jugador , click izquierdo: Disparar  "
+
+     world.add_component(text_entity,CTexto(texto,7,color))
+     pos = pygame.Vector2(10,25)
+     world.add_component(text_entity,CTransform(pos))
+
+def create_game_control(world:esper.World)-> int:
+     game_entity = world.create_entity()
+     world.add_component(game_entity,CGameState())
+     return game_entity
+def create_game_pause_text(world:esper.World):
+        text_entity = world.create_entity()
+        color = pygame.Color(253,253, 9)
+        texto = "**** Pausa ****"
+        world.add_component(text_entity,CTexto(texto,7,color))
+        pos = pygame.Vector2(300,150)
+        world.add_component(text_entity,CTransform(pos))
+        world.add_component(text_entity,CTagPause())
+
+def delete_game_pause_text(world:esper.World):
+        components = world.get_components(CTexto,CTransform,CTagPause)
+        c_t:CTexto
+        for entidad ,(c_t,c_t_r,c_t_p)  in components:
+             if(c_t.text=="**** Pausa ****") :
+                  world.delete_entity(entidad)
+                  break    
+
+
+
+
      
-     surface = text_entity
+
+
+
+
+
+
+
+
+
+
+
+   
      
-     orld.add_component(text_entity,CSurface.from_surface())
+
+     
+
+
      
 
 
