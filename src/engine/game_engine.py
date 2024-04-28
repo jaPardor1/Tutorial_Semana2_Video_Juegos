@@ -107,9 +107,7 @@ class GameEngine:
         
         system_show_texts(self.ecs_world)
         #system_animation(self.ecs_world,self.delta_time)
-        print(self._game_g_s.state)
         if(self._game_g_s.state == GameState.PLAYING ):
-           print("jugando")
            system_movement(self.ecs_world, self.delta_time)
            system_enemy_spawner(self.ecs_world,self.enemies_cfg,self.delta_time)
            system_animation(self.ecs_world,self.delta_time)
@@ -138,7 +136,8 @@ class GameEngine:
         pygame.quit()
 
     def _do_action(self,c_input:CInputCommand):
-        #print(c_input.name+" "+str(c_input.phase))
+        print(c_input.name+" "+str(c_input.phase))
+        
         if c_input.name=="PLAYER_LEFT":
             if c_input.phase == CommandPhase.START:
                 self._player_c_v.vel.x -= self.player_cfg["input_velocity"]
@@ -160,6 +159,7 @@ class GameEngine:
             elif c_input.phase == CommandPhase.END:
                 self._player_c_v.vel.y -= self.player_cfg["input_velocity"]
         if(c_input.name == "PLAYER_FIRE"):
+            print("fire!!")
             if c_input.phase == CommandPhase.START:
                ####
                pos_x = self._player_c_t.pos.x + self._player_c_s.area.size[0]/2 
