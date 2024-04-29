@@ -3,13 +3,14 @@ import json
 import pygame
 import esper
 
-from src.create.prefab_creator import create_bullet_square, create_game_control, create_input_player, create_player_square, create_square,create_enemy_spawner, create_textos_fijos
+from src.create.prefab_creator import activate_ability, create_bullet_square, create_game_control, create_input_player, create_player_square, create_square,create_enemy_spawner, create_textos_fijos
 from src.ecs.components.c_game_state import CGameState, GameState
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_texto import CTexto
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
+from src.ecs.systems.s_ability_status import system_ability_status
 from src.ecs.systems.s_animation import system_animation
 
 from src.ecs.systems.s_check_bullet_bound import system_check_bullet_bound
@@ -121,6 +122,7 @@ class GameEngine:
         system_limit_bullet_amount(self.ecs_world,self.level_01_cfg["player_spawn"]["max_bullets"])
         system_restrain_player_bound(self.ecs_world, self.screen)
         system_pause_control(self.ecs_world,self._game_entity)
+        system_ability_status(self.ecs_world)
         #system_hunter_chase(self.ecs_world,self._player_entity,self.enemies_cfg["Hunter"])
         system_hunter_state(self.ecs_world,self._player_entity)
         
@@ -136,7 +138,7 @@ class GameEngine:
         pygame.quit()
 
     def _do_action(self,c_input:CInputCommand):
-        print(c_input.name+" "+str(c_input.phase))
+        #print(c_input.name+" "+str(c_input.phase))
         
         if c_input.name=="PLAYER_LEFT":
             if c_input.phase == CommandPhase.START:
@@ -159,7 +161,7 @@ class GameEngine:
             elif c_input.phase == CommandPhase.END:
                 self._player_c_v.vel.y -= self.player_cfg["input_velocity"]
         if(c_input.name == "PLAYER_FIRE"):
-            print("fire!!")
+            #print("fire!!")
             if c_input.phase == CommandPhase.START:
                ####
                pos_x = self._player_c_t.pos.x + self._player_c_s.area.size[0]/2 
@@ -172,6 +174,12 @@ class GameEngine:
                       self._game_g_s.state = GameState.PLAYING
                    else :
                       self._game_g_s.state = GameState.PAUSED
+        if c_input.name =="PLAYER_SPECIAL":
+            print("fire especial !!")
+            if c_input.phase == CommandPhase.START:
+
+                activate_ability(self.ecs_world)
+
 
 
     

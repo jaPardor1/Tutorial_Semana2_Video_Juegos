@@ -3,6 +3,7 @@ from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
+from src.ecs.components.tags.c_tag_special_bullet import CTagSpecialBullet
 
 
 def system_limit_bullet_amount(world:esper.World,bullet_max_limit:int):
@@ -12,8 +13,9 @@ def system_limit_bullet_amount(world:esper.World,bullet_max_limit:int):
     
     if len(bullet_components) > bullet_max_limit:
          last_bullet = None
-         for bullet_entity ,(b_s,b_t,_) in bullet_components:
-             last_bullet=bullet_entity  
+         for bullet_entity ,(b_s,b_t,b_t_b) in bullet_components:
+            
+                last_bullet=bullet_entity  
 
          world.delete_entity(last_bullet)
     

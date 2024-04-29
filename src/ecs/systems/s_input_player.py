@@ -7,7 +7,6 @@ def system_input_player(world:esper.World,event:pygame.event.Event,do_action:Cal
     components = world.get_component(CInputCommand)
     
     for _,c_input in components:
-        print(event.type == pygame.MOUSEBUTTONDOWN)
         if event.type == pygame.KEYDOWN and c_input.key == event.key:
             c_input.phase = CommandPhase.START
             do_action(c_input)

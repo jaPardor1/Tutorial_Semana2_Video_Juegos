@@ -15,12 +15,14 @@ from src.ecs.components.c_texto import CTexto
 from src.ecs.components.c_tiempo_vida import CTiempoVida
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
+from src.ecs.components.tags.c_tag_ability import AbilityState, CTagAbility
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
 from src.ecs.components.tags.c_tag_chaser import CTagChaser
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
 from src.ecs.components.tags.c_tag_explosion import CTagExplosion
 from src.ecs.components.tags.c_tag_pause import CTagPause
 from src.ecs.components.tags.c_tag_player import CTagPlayer
+from src.ecs.components.tags.c_tag_special_bullet import CTagSpecialBullet
 from src.engine.service_locator import ServiceLocator
 
 
@@ -119,12 +121,14 @@ def create_input_player(world:esper.World):
      input_down = world.create_entity()
      MOUSE_down = world.create_entity()
      input_pause = world.create_entity()
+     input_special = world.create_entity()
      world.add_component(input_left,CInputCommand("PLAYER_LEFT",pygame.K_LEFT))
      world.add_component(input_right,CInputCommand("PLAYER_RIGHT",pygame.K_RIGHT))
      world.add_component(input_up,CInputCommand("PLAYER_UP",pygame.K_UP))
      world.add_component(input_down,CInputCommand("PLAYER_DOWN",pygame.K_DOWN))
      world.add_component(MOUSE_down,CInputCommand("PLAYER_FIRE",pygame.BUTTON_LEFT))
      world.add_component(input_pause,CInputCommand("PLAYER_PAUSE",pygame.K_p))
+     world.add_component(input_special,CInputCommand("PLAYER_SPECIAL",pygame.BUTTON_RIGHT))
 
 
 
@@ -162,15 +166,16 @@ def create_textos_fijos(world:esper.World):
      world.add_component(text_entity,CTexto("100%",8,color))
      pos = pygame.Vector2(10,330)
      world.add_component(text_entity,CTransform(pos))
+     world.add_component(text_entity,CTagAbility())
 
 
      #################################################################
 
      text_entity = world.create_entity()
      color = pygame.Color(253,253, 9)
-     texto = "Controles: tecla p= pausa , flechas = mover jugador , click izquierdo: Disparar  "
+     texto = "Controles: tecla p= pausa , flechas = mover jugador , click izquierdo: Disparar, click derecho: **Especial**  "
 
-     world.add_component(text_entity,CTexto(texto,7,color))
+     world.add_component(text_entity,CTexto(texto,5,color))
      pos = pygame.Vector2(10,25)
      world.add_component(text_entity,CTransform(pos))
 
@@ -193,31 +198,40 @@ def delete_game_pause_text(world:esper.World):
         for entidad ,(c_t,c_t_r,c_t_p)  in components:
              if(c_t.text=="**** Pausa ****") :
                   world.delete_entity(entidad)
-                  break    
+                  break
 
-
-
-
+def activate_ability(world:esper.World):
+     components = world.get_components(CTagBullet,CTransform,CVelocity,CSurface)
      
-
-
-
-
-
-
-
-
-
-
-
-   
+     text_component = world.get_components(CTexto,CTagAbility)
      
-
+     for comp , (c_t,c_t_a) in text_component:
+          if(c_t_a.state ==AbilityState.FULL ):
+              print("si")
+              c_t.text = "0%"
+              print(c_t_a.state)
+          
+     if(not c_t_a ==AbilityState.CHARGING ):
+        c_t_a.state =AbilityState.CHARGING 
+        limit = 4
+        amnt =1
      
+        for bullet_entity , (_,c_t,c_v,c_s) in components:
+           x=0
+           y=0
+           while amnt <=limit:
+             x = c_t.pos.x + c_s.area.width* (1 if amnt % 2 == 0 else -1)  # Alternar entre ancho y -ancho para la posición x
+             y = c_t.pos.y + c_s.area.height * (1 if amnt < 2 else -1) 
+             print(c_t.pos)
+             new_pos= pygame.Vector2(x,y)
+             create_special_bullet(world,new_pos,c_v.vel)
+             amnt +=1
+             world.delete_entity(bullet_entity)
 
 
+def create_special_bullet(world:esper.World,pos:pygame.Vector2,velo:pygame.Vector2):
+     bullet_surface = ServiceLocator.images_service.get("assets/img/bullet_especial.png")
+     special_bullet_entity = create_sprite(world,pos,velo,bullet_surface)
+     world.add_component(special_bullet_entity,CTagSpecialBullet(True))
+     world.add_component(special_bullet_entity,CTagBullet())
      
-
-
-
-    
